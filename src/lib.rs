@@ -1,10 +1,6 @@
 
 #![cfg_attr(not(test), no_std)]
 
-
-
-
-
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum FileSystemResult<T: Copy + Clone> {
     Ok(T),
@@ -796,8 +792,13 @@ impl<
                 return FileSystemResult::Err(FileSystemError::NotOpenForWrite)  
             } else{
                 let mut full = true;
-                for i in datatable {
-                    if i != u8::MAX {
+                let num_blocks = NUM_BLOCKS / 8;
+                for (i, value) in datatable.iter().enumerate() {
+                    //println!("{i}");
+                    if i > num_blocks  {
+                        break;
+                    }
+                    if *value != u8::MAX {
                         full = false;
                         break;
                     }
