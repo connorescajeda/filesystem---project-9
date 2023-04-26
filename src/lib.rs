@@ -126,11 +126,11 @@ impl<
         let mut count = 0;
         let mut filenames = [['\0' as u8; MAX_FILENAME_BYTES]; MAX_FILES_STORED];
         for (i, c) in self.directory_buffer.iter().enumerate() {
-            if i % 8 == 0 && *c != 0 as u8 {
+            if i % MAX_FILENAME_BYTES == 0 && *c != 0 as u8 {
                 count += 1;
-                filenames[count - 1][i % 8] = *c;
-            } else if i % 8 != 0{
-                filenames[count - 1][i % 8] = *c;
+                filenames[count - 1][i % MAX_FILENAME_BYTES] = *c;
+            } else if i % MAX_FILENAME_BYTES != 0{
+                filenames[count - 1][i % MAX_FILENAME_BYTES] = *c;
             } else{
                 break;
             }
@@ -1187,7 +1187,7 @@ mod tests {
         let f1 = sys.open_create("one.txt").unwrap();
         sys.write(f1, one.as_bytes()).unwrap();
         sys.close(f1).unwrap();
-
+        println!("{:?}", sys.list_directory().unwrap().1);
         let f2 = sys.open_create("one.txt").unwrap();
         sys.write(f2, two.as_bytes()).unwrap();
         sys.close(f2).unwrap();
@@ -1289,6 +1289,7 @@ mod tests {
             sys.write(f, content.as_bytes()).unwrap();
             sys.close(f).unwrap();
         }
+        
         match sys.open_create("Final") {
             FileSystemResult::Ok(_) => panic!("This should be an error!"),
             FileSystemResult::Err(e) => assert_eq!(e, FileSystemError::TooManyFiles),
