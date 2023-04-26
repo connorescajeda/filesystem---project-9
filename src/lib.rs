@@ -127,7 +127,8 @@ impl<
         let mut filenames = [['\0' as u8; MAX_FILENAME_BYTES]; MAX_FILES_STORED];
         for (i, c) in self.directory_buffer.iter().enumerate() {
             if i % 8 == 0 && *c != 0 as u8 {
-                count += 1
+                count += 1;
+                filenames[count - 1][i % 8] = *c;
             } else if i % 8 != 0{
                 filenames[count - 1][i % 8] = *c;
             } else{
@@ -1163,7 +1164,7 @@ mod tests {
         let f3 = sys.open_append("two.txt").unwrap();
 
         let f4 = sys.open_append("one.txt").unwrap();
-
+        println!("{:?}", sys.list_directory().unwrap());
         sys.write(f4, one[one.len() / 2..one.len()].as_bytes())
             .unwrap();
         sys.write(f3, two[two.len() / 2..two.len()].as_bytes())
