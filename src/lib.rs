@@ -1,4 +1,3 @@
-
 #![cfg_attr(not(test), no_std)]
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -120,6 +119,23 @@ impl<
         assert!(result.num_inode_entries() <= u16::MAX as usize);
         assert!(result.num_inode_blocks() <= MAX_FILE_BLOCKS);
         result
+    }
+
+    pub fn list_directory(&mut self) -> FileSystemResult<(usize, [[u8; MAX_FILENAME_BYTES]; MAX_FILES_STORED])> {
+        self.get_directory();
+        let mut count = 0;
+        let mut filenames = [['\0' as u8; MAX_FILENAME_BYTES]; MAX_FILES_STORED];
+        for (i, c) in self.directory_buffer.iter().enumerate() {
+            if i % 8 == 0 && *c != 0 as u8 {
+                count += 1
+            } else if i % 8 != 0 && *c != 0{
+                filenames[count - 1][i % 8] = *c;
+            } else{
+                break;
+            }
+        }
+
+        return FileSystemResult::Ok((count, filenames))
     }
 
     pub fn max_file_size(&self) -> usize {
@@ -542,7 +558,9 @@ impl<
                 
                 
                 let mut dir_blocks = [0; MAX_FILE_BLOCKS];
-                for block in self.file_content_buffer[2]..self.file_content_buffer[self.num_inode_bytes()]{
+                for i in 2..self.num_inode_bytes(){
+                    let block = self.file_content_buffer[i];
+                    println!("{}", block);
                     if dir_blocks.contains(&block){
 
                     } else{
@@ -569,8 +587,9 @@ impl<
                     _count += 1;
                 }
                 
-
+                //println!("{:?}", dir_blocks);
                 self.directory_buffer = self.write_to_dir(dir_blocks);
+                //println!("{:?}", self.directory_buffer);
                 let mut block_buffer = [0 as u8;BLOCK_SIZE]; 
                 self.disk.read(blocks[0] as usize, &mut block_buffer);
 
@@ -1150,8 +1169,10 @@ mod tests {
             .unwrap();
         sys.write(f3, two[two.len() / 2..two.len()].as_bytes())
             .unwrap();
+        
         sys.close(f1).unwrap();
         sys.close(f2).unwrap();
+        
         assert_eq!(one, read_to_string(&mut sys, "one.txt").as_str());
         assert_eq!(two, read_to_string(&mut sys, "two.txt").as_str());
     }
