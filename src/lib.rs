@@ -560,7 +560,6 @@ impl<
                 let mut dir_blocks = [0; MAX_FILE_BLOCKS];
                 for i in 2..self.num_inode_bytes(){
                     let block = self.file_content_buffer[i];
-                    println!("{}", block);
                     if dir_blocks.contains(&block){
 
                     } else{
