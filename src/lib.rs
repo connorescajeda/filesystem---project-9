@@ -128,7 +128,7 @@ impl<
         for (i, c) in self.directory_buffer.iter().enumerate() {
             if i % 8 == 0 && *c != 0 as u8 {
                 count += 1
-            } else if i % 8 != 0 && *c != 0{
+            } else if i % 8 != 0{
                 filenames[count - 1][i % 8] = *c;
             } else{
                 break;
