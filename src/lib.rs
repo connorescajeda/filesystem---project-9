@@ -213,7 +213,8 @@ impl<
                 let data = ((self.file_content_buffer[inode_start] as u16)<<8) | self.file_content_buffer[inode_start+1] as u16;
                 let mut inode_blocks = [self.file_content_buffer[inode_start+2];MAX_FILE_BLOCKS];
                 let mut count = 1;
-                for block in self.file_content_buffer[inode_start+2]..self.file_content_buffer[inode_start+self.num_inode_bytes()]{
+                for i in inode_start+2..inode_start+self.num_inode_bytes(){
+                    let block = self.file_content_buffer[i];
                     if inode_blocks.contains(&block) {
 
                     } else{
