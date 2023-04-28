@@ -280,7 +280,8 @@ impl<
         self.get_inode_table();
         let mut dir_blocks = [0; MAX_FILE_BLOCKS];
         let mut count = 0;
-        for block in self.file_content_buffer[2]..self.file_content_buffer[self.num_inode_bytes()] {
+        for i in 2..self.num_inode_bytes() {
+            let block = self.file_content_buffer[i];
             if dir_blocks.contains(&block){
 
             } else{
