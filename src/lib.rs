@@ -320,7 +320,7 @@ impl<
         if itable[0] & (1 << 0) == 0 {
             let num_active_blocks = 2 + self.num_inode_blocks();
             for i in 0..num_active_blocks + 1{
-                let block = i / MAX_FILE_BLOCKS;
+                let block = i / 8;
                 let bit = i % 8;
                 datatable[block] |= 1 << bit;
             }
@@ -434,7 +434,7 @@ impl<
                         in_use = self.file_content_buffer[i as usize];
                     }
                     if count > 2{
-                        let block = i / MAX_FILE_BLOCKS;
+                        let block = i / 8;
                         let bit = i % 8;
                         data_table_buffer[block as usize] &= !(1 << bit);
                         self.file_content_buffer[i as usize] = in_use;
