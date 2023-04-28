@@ -816,7 +816,7 @@ impl<
                 return FileSystemResult::Err(FileSystemError::NotOpenForWrite)  
             } else{
                 let mut full = true;
-                let num_blocks = NUM_BLOCKS / MAX_FILE_BLOCKS; // changed for magic number
+                let num_blocks = NUM_BLOCKS / 8; // changed for magic number
                 for (i, value) in datatable.iter().enumerate() {
                     //println!("{i}");
                     if i > num_blocks  {
