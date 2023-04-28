@@ -296,7 +296,7 @@ impl<
             let mut buffer = [0; BLOCK_SIZE];
             self.disk.read(*block as usize, &mut buffer);
             for (j, value) in buffer.iter().enumerate(){
-                self.directory_buffer[j + (64 * i)] = *value;
+                self.directory_buffer[j + (BLOCK_SIZE * i)] = *value;
             }
         }
         
@@ -551,7 +551,7 @@ impl<
                 
                 let mut count = 0;
                 
-                if 64 - index_start < MAX_FILENAME_BYTES {
+                if BLOCK_SIZE - index_start < MAX_FILENAME_BYTES {
                     let new_data_block = self.return_open_data();
                     datatable[new_data_block[0] as usize] |= 1 << new_data_block[1];
                     self.file_content_buffer = self.add_new_data_to_inode(0, new_data_block[2]);
@@ -578,7 +578,7 @@ impl<
                     let mut buffer = [0; BLOCK_SIZE];
                     self.disk.read(*block as usize, &mut buffer);
                     for (j, value) in buffer.iter().enumerate(){
-                        self.directory_buffer[j + (64 * i)] = *value;
+                        self.directory_buffer[j + (BLOCK_SIZE * i)] = *value;
                     }
                 }
                 
