@@ -319,7 +319,7 @@ impl<
         if itable[0] & (1 << 0) == 0 {
             let num_active_blocks = 2 + self.num_inode_blocks();
             for i in 0..num_active_blocks + 1{
-                let block = i / 8;
+                let block = i / MAX_FILE_BLOCKS;
                 let bit = i % 8;
                 datatable[block] |= 1 << bit;
             }
@@ -812,7 +812,7 @@ impl<
                 return FileSystemResult::Err(FileSystemError::NotOpenForWrite)  
             } else{
                 let mut full = true;
-                let num_blocks = NUM_BLOCKS / 8;
+                let num_blocks = NUM_BLOCKS / MAX_FILE_BLOCKS; // changed for magic number
                 for (i, value) in datatable.iter().enumerate() {
                     //println!("{i}");
                     if i > num_blocks  {
