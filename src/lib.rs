@@ -432,7 +432,7 @@ impl<
                         in_use = self.file_content_buffer[i as usize];
                     }
                     if count > 2{
-                        let block = i / 8;
+                        let block = i / MAX_FILE_BLOCKS;
                         let bit = i % 8;
                         data_table_buffer[block as usize] &= !(1 << bit);
                         self.file_content_buffer[i as usize] = in_use;
