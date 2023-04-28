@@ -169,6 +169,9 @@ impl<
     pub fn get_open(&self) -> [Option<FileInfo<MAX_FILE_BLOCKS, BLOCK_SIZE>>; MAX_OPEN]{
         self.open
     }
+    pub fn get_file_content_buffer(&self) -> [u8; MAX_FILE_BYTES]{
+        self.file_content_buffer
+    }
 
     pub fn open_read(&mut self, filename: &str) -> FileSystemResult<usize> {
         self.get_directory();
