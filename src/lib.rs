@@ -423,6 +423,7 @@ impl<
             } else {
                 let inode_start = inode_num * self.num_inode_bytes();
                 let mut data_table_buffer = [0; BLOCK_SIZE];
+                self.disk.read(DATA_FULL_BLOCK, &mut data_table_buffer);
                 let mut count = 0;
                 let mut in_use = 0;
                 for i in inode_start..inode_start + self.num_inode_bytes(){
@@ -444,8 +445,7 @@ impl<
                 let mut start_block = 2;
     
                 self.file_content_buffer = self.write_to_inode_table(start_block);
-                self.disk.read(DATA_FULL_BLOCK, &mut data_table_buffer);
-    
+                
                 self.disk.write(DATA_FULL_BLOCK, &mut data_table_buffer);
     
                 let data = ((self.file_content_buffer[inode_start as usize] as u16)<<8) | self.file_content_buffer[inode_start as usize+1] as u16;
