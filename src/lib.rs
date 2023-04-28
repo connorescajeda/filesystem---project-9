@@ -166,6 +166,9 @@ impl<
     pub fn first_data_block(&self) -> usize {
         2 + self.num_inode_blocks()
     }
+    pub fn get_open(&self) -> [Option<FileInfo<MAX_FILE_BLOCKS, BLOCK_SIZE>>; MAX_OPEN]{
+        self.open
+    }
 
     pub fn open_read(&mut self, filename: &str) -> FileSystemResult<usize> {
         self.get_directory();
