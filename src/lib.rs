@@ -764,7 +764,9 @@ impl<
                             blocks_used = count
                         }
                         count += 1;
-                        
+                        if count == MAX_FILE_BLOCKS {
+                            break;
+                        }
                     }
                     
                 }
